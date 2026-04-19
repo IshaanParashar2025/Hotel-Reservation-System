@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurélia Grand Hotel</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --gold: #C9A96E;
+    --gold-light: #E8D5B0;
+    --gold-dark: #9B7A45;
+    --ivory: #FAF8F3;
+    --cream: #F3EFE5;
+    --charcoal: #1A1814;
+    --charcoal-mid: #2E2B26;
+    --stone: #6B6558;
+    --stone-light: #A09880;
+    --white: #FFFFFF;
+    --error: #C0392B;
+    --success: #2E7D32;
+    --radius: 2px;
+    --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Jost', sans-serif;
+    background: var(--ivory);
+    color: var(--charcoal);
+    font-weight: 300;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ===== UTILITY ===== */
+  .serif { font-family: 'Cormorant Garamond', serif; }
+  .hidden { display: none !important; }
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ===== LOADER ===== */
+  #loader {
+    position: fixed; inset: 0;
+    background: var(--charcoal);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 9999;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+  }
+  #loader.fade-out { opacity: 0; visibility: hidden; pointer-events: none; }
+  .loader-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    color: var(--gold);
+    letter-spacing: 0.3em;
+    animation: pulse 1.5s ease infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+  /* ===== HEADER / NAV ===== */
+  header {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.5rem 4rem;
+    display: flex; align-items: center; justify-content: space-between;
+    transition: background var(--transition), padding var(--transition);
+  }
+  header.scrolled {
+    background: rgba(26,24,20,0.96);
+    backdrop-filter: blur(12px);
+    padding: 1rem 4rem;
+  }
+  .logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--gold-light);
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .logo span { color: var(--gold); font-style: italic; }
+
+  nav { display: flex; align-items: center; gap: 2.5rem; }
+  nav a {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--transition);
+    background: none; border: none; font-family: 'Jost', sans-serif;
+    font-weight: 300;
+  }
+  nav a:hover { color: var(--gold-light); }
+
+  .nav-btn {
+    border: 1px solid var(--gold);
+    color: var(--gold) !important;
+    padding: 0.5rem 1.4rem;
+    letter-spacing: 0.18em;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    border-radius: var(--radius);
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    background: transparent;
+    text-decoration: none;
+  }
+  .nav-btn:hover { background: var(--gold); color: var(--charcoal) !important; }
+  .nav-btn.filled { background: var(--gold); color: var(--charcoal) !important; }
+
+  /* ===== HERO ===== */
+  #hero {
+    height: 100vh;
+    background: linear-gradient(160deg, #1A1814 0%, #2E2B26 50%, #1A1814 100%);
+    position: relative;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden;
+  }
+  .hero-pattern {
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 50% 50%, rgba(201,169,110,0.07) 0%, transparent 70%),
+      repeating-linear-gradient(45deg, transparent, transparent 60px, rgba(201,169,110,0.025) 60px, rgba(201,169,110,0.025) 61px);
+  }
+  .hero-content {
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    animation: fadeUp 1.2s ease both;
+    animation-delay: 0.5s;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero-eyebrow {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3rem, 7vw, 7rem);
+    font-weight: 300;
+    color: var(--ivory);
+    line-height: 1.05;
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em { color: var(--gold); font-style: italic; }
+  .hero-sub {
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 3rem;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--charcoal);
+    padding: 0.9rem 2.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    border-radius: var(--radius);
+    transition: background var(--transition), transform var(--transition);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); }
+  .btn-outline {
+    background: transparent;
+    color: var(--ivory);
+    padding: 0.9rem 2.5rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: 1px solid rgba(255,255,255,0.3);
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+    border-radius: var(--radius);
+    transition: border-color var(--transition), color var(--transition);
+    text-decoration: none;
+    display: inline-block;
+  }
+  .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+
+  .hero-scroll {
+    position: absolute; bottom: 2.5rem; left: 50%;
+    transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    color: rgba(255,255,255,0.35);
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    animation: bounce 2s ease infinite;
+  }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(to bottom, rgba(201,169,110,0.6), transparent);
+  }
+  @keyframes bounce { 0%,100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(8px); } }
+
+  /* ===== SECTION BASES ===== */
+  section { padding: 6rem 4rem; }
+  .section-header { text-align: center; margin-bottom: 4rem; }
+  .section-eyebrow {
+    font-size: 0.62rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 300;
+    color: var(--charcoal);
+    line-height: 1.15;
+  }
+  .section-title em { font-style: italic; color: var(--gold-dark); }
+  .divider {
+    width: 60px; height: 1px;
+    background: var(--gold);
+    margin: 1.5rem auto 0;
+  }
+  .section-sub {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--stone);
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.8;
+  }
+
+  /* ===== ABOUT STRIP ===== */
+  #about { background: var(--charcoal); }
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .about-text .section-title { color: var(--ivory); }
+  .about-text p {
+    color: rgba(255,255,255,0.55);
+    font-size: 0.9rem;
+    line-height: 1.9;
+    margin-top: 1.5rem;
+  }
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  }
+  .stat {
+    text-align: center;
+    padding: 2rem;
+    border: 1px solid rgba(201,169,110,0.2);
+  }
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 3rem;
+    font-weight: 300;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+  .stat-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  #rooms { background: var(--ivory); }
+  .rooms-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .rooms-grid-bottom {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    max-width: 820px;
+    margin: 2rem auto 0;
+  }
+  .room-card {
+    background: var(--white);
+    border: 1px solid rgba(107,101,88,0.12);
+    overflow: hidden;
+    transition: transform var(--transition), box-shadow var(--transition);
+    cursor: pointer;
+  }
+  .room-card:hover { transform: translateY(-6px); box-shadow: 0 20px 60px rgba(26,24,20,0.1); }
+  .room-img {
+    height: 220px;
+    background: var(--cream);
+    position: relative;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .room-img-placeholder {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 4rem;
+    color: var(--gold-light);
+    opacity: 0.5;
+  }
+  .room-badge {
+    position: absolute; top: 1rem; right: 1rem;
+    background: var(--gold);
+    color: var(--charcoal);
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    font-weight: 400;
+  }
+  .room-body { padding: 1.5rem; }
+  .room-type {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.5rem;
+  }
+  .room-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+    color: var(--charcoal);
+    margin-bottom: 0.75rem;
+  }
+  .room-desc {
+    font-size: 0.82rem;
+    color: var(--stone);
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+  .room-features {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+  }
+  .feature-tag {
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--stone);
+    border: 1px solid rgba(107,101,88,0.25);
+    padding: 0.25rem 0.6rem;
+  }
+  .room-footer {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    border-top: 1px solid rgba(107,101,88,0.1);
+    padding-top: 1rem;
+  }
+  .room-price-label { font-size: 0.65rem; color: var(--stone-light); letter-spacing: 0.1em; }
+  .room-price {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--charcoal);
+    font-weight: 400;
+    line-height: 1;
+  }
+  .room-price sup {
+    font-size: 0.9rem;
+    vertical-align: super;
+    font-family: 'Jost', sans-serif;
+    font-weight: 300;
+  }
+  .room-book-btn {
+    background: var(--charcoal);
+    color: var(--ivory);
+    border: none;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    transition: background var(--transition);
+    border-radius: var(--radius);
+  }
+  .room-book-btn:hover { background: var(--gold-dark); }
+
+  /* ===== AMENITIES ===== */
+  #amenities { background: var(--cream); }
+  .amenities-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .amenity-item { text-align: center; padding: 2rem 1rem; }
+  .amenity-icon {
+    width: 56px; height: 56px;
+    margin: 0 auto 1.25rem;
+    border: 1px solid var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+  }
+  .amenity-icon svg { width: 22px; height: 22px; stroke: var(--gold); fill: none; stroke-width: 1.5; }
+  .amenity-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    color: var(--charcoal);
+    margin-bottom: 0.4rem;
+  }
+  .amenity-desc { font-size: 0.78rem; color: var(--stone); line-height: 1.7; }
+
+  /* ===== BOOKING SECTION ===== */
+  #booking { background: var(--charcoal-mid); }
+  #booking .section-title { color: var(--ivory); }
+  .booking-form-wrap {
+    background: var(--ivory);
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+  .form-group label {
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--stone);
+    font-weight: 400;
+  }
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    border: 1px solid rgba(107,101,88,0.25);
+    background: var(--white);
+    padding: 0.75rem 1rem;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.88rem;
+    color: var(--charcoal);
+    font-weight: 300;
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+    outline: none;
+    width: 100%;
+  }
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus { border-color: var(--gold); }
+  .form-submit-row { text-align: center; margin-top: 1rem; }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--charcoal);
+    padding: 1rem 3rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    border: none;
+    cursor: pointer;
+    font-family: 'Jost', sans-serif;
+    font-weight: 400;
+    border-radius: var(--radius);
+    transition: background var(--transition);
+    width: 100%;
+  }
+  .btn-gold:hover { background: var(--gold-dark); }
+  .btn-gold:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ===== MODAL ===== */
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(26,24,20,0.85);
+    z-index: 200;
+    display: flex; align-items: center; justify-content: center;
+    padding: 1rem;
+    opacity: 0; pointer-events: none;
+    transition: opacity var(--transition);
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal {
+    background: var(--ivory);
+    width: 100%;
+    max-width: 500px;
+    padding: 3rem;
+    position: relative;
+    transform: translateY(30px);
+    transition: transform var(--transition);
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-close {
+    position: absolute; top: 1.5rem; right: 1.5rem;
+    background: none; border: none;
+    font-size: 1.4rem; cursor: pointer; color: var(--stone);
+    line-height: 1;
+    transition: color var(--transition);
+  }
+  .modal-close:hover { color: var(--charcoal); }
+  .modal-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--charcoal);
+    margin-bottom: 0.25rem;
+  }
+  .modal-sub { font-size: 0.82rem; color: var(--stone); margin-bottom: 2rem; }
+  .modal-tabs {
+    display: flex; gap: 0;
+    border-bottom: 1px solid rgba(107,101,88,0.2);
+    margin-bottom: 2rem;
+  }
+  .modal-tab {
+    background: none; border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--stone);
+    cursor: pointer;
+    padding: 0.75rem 1.5rem;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color var(--transition), border-color var(--transition);
+  }
+  .modal-tab.active { color: var(--gold-dark); border-bottom-color: var(--gold); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ===== DASHBOARD ===== */
+  #dashboard { background: var(--ivory); padding: 8rem 4rem 4rem; min-height: 100vh; }
+  .dash-header {
+    max-width: 1100px;
+    margin: 0 auto 3rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .dash-welcome {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.5rem;
+    font-weight: 300;
+    color: var(--charcoal);
+  }
+  .dash-welcome span { color: var(--gold-dark); font-style: italic; }
+  .dash-grid {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2rem;
+  }
+  .dash-sidebar {
+    background: var(--charcoal);
+    padding: 2rem;
+    height: fit-content;
+    position: sticky;
+    top: 7rem;
+  }
+  .dash-user-info { margin-bottom: 2rem; }
+  .dash-avatar {
+    width: 60px; height: 60px;
+    background: var(--gold-dark);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.5rem;
+    color: var(--ivory);
+    margin-bottom: 1rem;
+  }
+  .dash-user-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--ivory);
+    font-weight: 400;
+  }
+  .dash-user-email { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+  .dash-menu { list-style: none; }
+  .dash-menu li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dash-menu button {
+    background: none; border: none;
+    font-family: 'Jost', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    cursor: pointer;
+    width: 100%; text-align: left;
+    padding: 0.2rem 0;
+    transition: color var(--transition);
+  }
+  .dash-menu button:hover,
+  .dash-menu button.active { color: var(--gold); }
+  .dash-logout {
+    margin-top: 2rem;
+    background: none; border: 1px solid rgba(201,169,110,0.3);
+    font-family: 'Jost', sans-serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(201,169,110,0.7);
+    cursor: pointer;
+    padding: 0.6rem 1rem;
+    width: 100%;
+    transition: all var(--transition);
+    border-radius: var(--radius);
+  }
+  .dash-logout:hover { background: rgba(201,169,110,0.1); color: var(--gold); }
+
+  .dash-content { display: flex; flex-direction: column; gap: 2rem; }
+  .dash-panel { display: none; }
+  .dash-panel.active { display: block; }
+  .panel-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    font-weight: 300;
+    color: var(--charcoal);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(107,101,88,0.15);
+  }
+
+  /* Reservation cards */
+  .res-card {
+    background: var(--white);
+    border: 1px solid rgba(107,101,88,0.12);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+    transition: box-shadow var(--transition);
+  }
+  .res-card:hover { box-shadow: 0 4px 20px rgba(26,24,20,0.06); }
+  .res-room-type {
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.3rem;
+  }
+  .res-dates {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    color: var(--charcoal);
+    margin-bottom: 0.4rem;
+  }
+  .res-meta { font-size: 0.78rem; color: var(--stone); }
+  .res-status {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+  .status-confirmed { background: rgba(46,125,50,0.1); color: #2E7D32; }
+  .status-pending { background: rgba(201,169,110,0.15); color: var(--gold-dark); }
+  .status-cancelled { background: rgba(192,57,43,0.1); color: var(--error); }
+  .res-actions { display: flex; gap: 0.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+  .btn-sm {
+    font-family: 'Jost', sans-serif;
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.4rem 0.9rem;
+    cursor: pointer;
+    border-radius: var(--radius);
+    transition: all var(--transition);
+    border: 1px solid;
+  }
+  .btn-sm-outline {
+    background: none;
+    border-color: rgba(107,101,88,0.3);
+    color: var(--stone);
+  }
+  .btn-sm-outline:hover { border-color: var(--gold); color: var(--gold-dark); }
+  .btn-sm-danger {
+    background: none;
+    border-color: rgba(192,57,43,0.3);
+    color: var(--error);
+  }
+  .btn-sm-danger:hover { background: rgba(192,57,43,0.06); }
+
+  /* Notification */
+  .notify {
+    position: fixed; top: 5.5rem; right: 2rem;
+    background: var(--charcoal);
+    color: var(--ivory);
+    padding: 1rem 1.5rem;
+    min-width: 280px;
+    font-size: 0.82rem;
+    z-index: 300;
+    transform: translateX(120%);
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    border-left: 3px solid var(--gold);
+  }
+  .notify.show { transform: translateX(0); }
+  .notify.success-notify { border-left-color: var(--success); }
+  .notify.error-notify { border-left-color: var(--error); }
+
+  /* MSG */
+  .msg { font-size: 0.78rem; padding: 0.75rem 1rem; border-radius: var(--radius); margin-bottom: 1rem; }
+  .msg-error { background: rgba(192,57,43,0.08); color: var(--error); border: 1px solid rgba(192,57,43,0.2); }
+  .msg-success { background: rgba(46,125,50,0.08); color: var(--success); border: 1px solid rgba(46,125,50,0.2); }
+
+  /* Empty state */
+  .empty-state { text-align: center; padding: 4rem 2rem; }
+  .empty-icon { font-size: 3rem; margin-bottom: 1rem; opacity: 0.25; }
+  .empty-title { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--charcoal); margin-bottom: 0.5rem; }
+  .empty-sub { font-size: 0.82rem; color: var(--stone); }
+
+  /* Profile form */
+  .profile-wrap { background: var(--white); border: 1px solid rgba(107,101,88,0.12); padding: 2rem; }
+
+  /* FOOTER */
+  footer {
+    background: var(--charcoal);
+    padding: 4rem;
+    text-align: center;
+  }
+  .footer-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    margin-bottom: 1rem;
+  }
+  .footer-tagline { font-size: 0.7rem; letter-spacing: 0.2em; color: rgba(255,255,255,0.3); text-transform: uppercase; }
+  .footer-links {
+    display: flex; gap: 2rem; justify-content: center;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+  .footer-links a {
+    font-size: 0.65rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+  .footer-links a:hover { color: var(--gold); }
+  .footer-copy { margin-top: 2.5rem; font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+
+  /* ===== SPINNER ===== */
+  .spinner {
+    display: inline-block;
+    width: 16px; height: 16px;
+    border: 2px solid rgba(26,24,20,0.2);
+    border-top-color: var(--charcoal);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .spinner-gold { border-color: rgba(201,169,110,0.2); border-top-color: var(--gold); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    header { padding: 1.2rem 2rem; }
+    header.scrolled { padding: 0.8rem 2rem; }
+    section { padding: 4rem 2rem; }
+    .rooms-grid { grid-template-columns: 1fr; max-width: 480px; }
+    .rooms-grid-bottom { grid-template-columns: 1fr; max-width: 480px; }
+    .amenities-grid { grid-template-columns: 1fr 1fr; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .dash-grid { grid-template-columns: 1fr; }
+    .dash-sidebar { position: static; }
+    #dashboard { padding: 7rem 2rem 3rem; }
+    nav { gap: 1rem; }
+    .form-row { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 600px) {
+    .amenities-grid { grid-template-columns: 1fr; }
+    .hero-actions { flex-direction: column; align-items: center; }
+    .booking-form-wrap { padding: 1.5rem; }
+    .modal { padding: 2rem 1.5rem; }
+    nav a.hide-mobile { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div id="loader">
+  <div class="loader-text">AURÉLIA</div>
+</div>
+
+<div class="notify" id="notify"></div>
+
+<header id="header">
+  <a class="logo" onclick="showPage('home')">
+    <span>Aurélia</span> Grand Hotel
+  </a>
+  <nav>
+    <a class="hide-mobile" onclick="scrollToSection('rooms')">Rooms</a>
+    <a class="hide-mobile" onclick="scrollToSection('amenities')">Amenities</a>
+    <a class="hide-mobile" onclick="scrollToSection('booking')">Reserve</a>
+    <button class="nav-btn" id="nav-auth-btn" onclick="openAuthModal()">Sign In</button>
+    <button class="nav-btn filled hidden" id="nav-dash-btn" onclick="showPage('dashboard')">My Stays</button>
+  </nav>
+</header>
+
+<div class="modal-overlay" id="auth-modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuthModal()">✕</button>
+    <div class="modal-title serif">Welcome</div>
+    <div class="modal-sub">Sign in to manage your reservations</div>
+    <div class="modal-tabs">
+      <button class="modal-tab active" onclick="switchTab('login')">Sign In</button>
+      <button class="modal-tab" onclick="switchTab('signup')">Create Account</button>
+    </div>
+    <div class="tab-panel active" id="tab-login">
+      <div id="login-msg"></div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label>Email Address</label>
+        <input type="email" id="login-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem">
+        <label>Password</label>
+        <input type="password" id="login-password" placeholder="••••••••">
+      </div>
+      <button class="btn-gold" id="login-btn" onclick="handleLogin()">Sign In</button>
+    </div>
+    <div class="tab-panel" id="tab-signup">
+      <div id="signup-msg"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem">
+        <div class="form-group">
+          <label>First Name</label>
+          <input type="text" id="signup-fname" placeholder="John">
+        </div>
+        <div class="form-group">
+          <label>Last Name</label>
+          <input type="text" id="signup-lname" placeholder="Doe">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label>Phone Number</label>
+        <input type="tel" id="signup-phone" placeholder="+91 00000 00000">
+      </div>
+      <div class="form-group" style="margin-bottom:1rem">
+        <label>Email Address</label>
+        <input type="email" id="signup-email" placeholder="you@example.com">
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem">
+        <label>Password</label>
+        <input type="password" id="signup-password" placeholder="Min. 6 characters">
+      </div>
+      <button class="btn-gold" id="signup-btn" onclick="handleSignup()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="new-res-modal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('new-res-modal')">✕</button>
+    <div class="modal-title serif">Reserve a Room</div>
+    <div class="modal-sub" id="new-res-room-name">Select dates for your stay</div>
+    <div id="new-res-msg"></div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Check-in Date</label>
+        <input type="date" id="res-checkin">
+      </div>
+      <div class="form-group">
+        <label>Check-out Date</label>
+        <input type="date" id="res-checkout">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:1.5rem">
+      <label>Room Type</label>
+      <select id="res-room-type">
+        <option value="single">Single</option>
+        <option value="double">Double</option>
+        <option value="triple">Triple</option>
+        <option value="luxury">Luxury</option>
+        <option value="deluxe">Deluxe</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:1.5rem">
+      <label>Special Requests</label>
+      <textarea id="res-requests" rows="3" placeholder="Any special preferences or requests…"></textarea>
+    </div>
+    <button class="btn-gold" id="res-submit-btn" onclick="handleNewReservation()">Confirm Reservation</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="edit-res-modal">
+  <div class="modal" style="max-width:560px">
+    <button class="modal-close" onclick="closeModal('edit-res-modal')">✕</button>
+    <div class="modal-title serif">Modify Reservation</div>
+    <div class="modal-sub">Update your booking details</div>
+    <div id="edit-res-msg"></div>
+    <input type="hidden" id="edit-res-id">
+    <div class="form-row">
+      <div class="form-group">
+        <label>Check-in Date</label>
+        <input type="date" id="edit-checkin">
+      </div>
+      <div class="form-group">
+        <label>Check-out Date</label>
+        <input type="date" id="edit-checkout">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:1.5rem">
+      <label>Room Type</label>
+      <select id="edit-room-type">
+        <option value="single">Single</option>
+        <option value="double">Double</option>
+        <option value="triple">Triple</option>
+        <option value="luxury">Luxury</option>
+        <option value="deluxe">Deluxe</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:1.5rem">
+      <label>Special Requests</label>
+      <textarea id="edit-requests" rows="3"></textarea>
+    </div>
+    <button class="btn-gold" id="edit-res-btn" onclick="handleEditReservation()">Update Reservation</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="cost-modal">
+  <div class="modal" style="max-width:420px;text-align:center">
+    <button class="modal-close" onclick="closeModal('cost-modal')">✕</button>
+    <div class="modal-title serif">Reservation Cost</div>
+    <div class="modal-sub" id="cost-res-label">Booking details</div>
+    <div id="cost-modal-body" style="margin-top:1.5rem">
+      <div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title serif">Calculating…</div></div>
+    </div>
+  </div>
+</div>
+
+<div id="page-home" class="page active">
+
+  <section id="hero">
+    <div class="hero-pattern"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Est. 1924 · Paris, France</div>
+      <h1 class="hero-title">Where Luxury<br>Becomes <em>Legacy</em></h1>
+      <p class="hero-sub">A sanctuary of timeless elegance, nestled in the heart of the city</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="scrollToSection('booking')">Reserve Your Suite</button>
+        <button class="btn-outline" onclick="scrollToSection('rooms')">Explore Rooms</button>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <section id="about">
+    <div class="about-grid">
+      <div class="about-text">
+        <div class="section-eyebrow">Our Story</div>
+        <h2 class="section-title serif" style="color:var(--ivory)">A Century of <em style="color:var(--gold)">Refinement</em></h2>
+        <div class="divider"></div>
+        <p>Since 1924, Aurélia Grand Hotel has been the chosen home of discerning travellers, dignitaries, and artists who seek not merely accommodation, but an experience that transcends the ordinary.</p>
+        <p>Each suite is a curated world of its own — where antique craftsmanship meets contemporary comfort, and every detail has been considered with devotion to the art of hospitality.</p>
+      </div>
+      <div class="about-stats">
+        <div class="stat"><div class="stat-num">98</div><div class="stat-label">Suites & Rooms</div></div>
+        <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Rating</div></div>
+        <div class="stat"><div class="stat-num">100</div><div class="stat-label">Years of Legacy</div></div>
+        <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Butler Service</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rooms">
+    <div class="section-header">
+      <div class="section-eyebrow">Accommodations</div>
+      <h2 class="section-title serif">Your Private <em>Sanctuary</em></h2>
+      <div class="divider"></div>
+      <p class="section-sub">Each room is a world unto itself, designed to envelop you in comfort and quiet grandeur.</p>
+    </div>
+    <div class="rooms-grid">
+      <div class="room-card">
+        <div class="room-img">
+          <div class="room-img-placeholder">✦</div>
+        </div>
+        <div class="room-body">
+          <div class="room-type">Classic</div>
+          <div class="room-name serif">Single Room</div>
+          <div class="room-desc">An intimate retreat for the solo traveller — thoughtfully appointed with a plush queen bed, writing desk, and city views.</div>
+          <div class="room-features">
+            <span class="feature-tag">28 m²</span>
+            <span class="feature-tag">Queen Bed</span>
+            <span class="feature-tag">1 Guest</span>
+          </div>
+          <div class="room-footer">
+            <div>
+              <div class="room-price-label">From per night</div>
+              <div class="room-price serif"><sup>₹</sup>1000</div>
+            </div>
+            <button class="room-book-btn" onclick="openNewResModal('single')">Reserve</button>
+          </div>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img">
+          <div class="room-img-placeholder">❧</div>
+          <div class="room-badge">Most Popular</div>
+        </div>
+        <div class="room-body">
+          <div class="room-type">Classic</div>
+          <div class="room-name serif">Double Room</div>
+          <div class="room-desc">Spacious comfort for two, with a king bed, marble bath, and a serene sitting area bathed in natural light.</div>
+          <div class="room-features">
+            <span class="feature-tag">38 m²</span>
+            <span class="feature-tag">King Bed</span>
+            <span class="feature-tag">2 Guests</span>
+          </div>
+          <div class="room-footer">
+            <div>
+              <div class="room-price-label">From per night</div>
+              <div class="room-price serif"><sup>₹</sup>1900</div>
+            </div>
+            <button class="room-book-btn" onclick="openNewResModal('double')">Reserve</button>
+          </div>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img">
+          <div class="room-img-placeholder">✧</div>
+        </div>
+        <div class="room-body">
+          <div class="room-type">Family</div>
+          <div class="room-name serif">Triple Room</div>
+          <div class="room-desc">Generously proportioned for families or groups of three, offering two beds, ample storage, and a private lounge corner.</div>
+          <div class="room-features">
+            <span class="feature-tag">52 m²</span>
+            <span class="feature-tag">2 Beds</span>
+            <span class="feature-tag">3 Guests</span>
+          </div>
+          <div class="room-footer">
+            <div>
+              <div class="room-price-label">From per night</div>
+              <div class="room-price serif"><sup>₹</sup>2700</div>
+            </div>
+            <button class="room-book-btn" onclick="openNewResModal('triple')">Reserve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="rooms-grid-bottom">
+      <div class="room-card">
+        <div class="room-img">
+          <div class="room-img-placeholder">✺</div>
+        </div>
+        <div class="room-body">
+          <div class="room-type">Signature</div>
+          <div class="room-name serif">Luxury Room</div>
+          <div class="room-desc">Elevated in every sense — handwoven textiles, a panoramic soaking tub, private terrace, and dedicated butler service.</div>
+          <div class="room-features">
+            <span class="feature-tag">75 m²</span>
+            <span class="feature-tag">Terrace</span>
+            <span class="feature-tag">Butler</span>
+          </div>
+          <div class="room-footer">
+            <div>
+              <div class="room-price-label">From per night</div>
+              <div class="room-price serif"><sup>₹</sup>5000</div>
+            </div>
+            <button class="room-book-btn" onclick="openNewResModal('luxury')">Reserve</button>
+          </div>
+        </div>
+      </div>
+      <div class="room-card">
+        <div class="room-img">
+          <div class="room-img-placeholder">✾</div>
+          <div class="room-badge" style="background:var(--charcoal)">Pinnacle</div>
+        </div>
+        <div class="room-body">
+          <div class="room-type">Pinnacle</div>
+          <div class="room-name serif">Deluxe Room</div>
+          <div class="room-desc">The crown of Aurélia — two-level living, a grand piano, private spa, and floor-to-ceiling views of the city skyline.</div>
+          <div class="room-features">
+            <span class="feature-tag">140 m²</span>
+            <span class="feature-tag">Private Spa</span>
+            <span class="feature-tag">Panoramic</span>
+          </div>
+          <div class="room-footer">
+            <div>
+              <div class="room-price-label">From per night</div>
+              <div class="room-price serif"><sup>₹</sup>8000</div>
+            </div>
+            <button class="room-book-btn" onclick="openNewResModal('deluxe')">Reserve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="amenities">
+    <div class="section-header">
+      <div class="section-eyebrow">Facilities</div>
+      <h2 class="section-title serif">Every <em>Desire</em> Attended</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="amenities-grid">
+      <div class="amenity-item">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 12l9-9 9 9M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg>
+        </div>
+        <div class="amenity-name serif">Fine Dining</div>
+        <div class="amenity-desc">Three Michelin-starred restaurants helmed by celebrated chefs offering cuisine from around the world.</div>
+      </div>
+      <div class="amenity-item">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="amenity-name serif">Aurélia Spa</div>
+        <div class="amenity-desc">A 3,000 m² wellness sanctuary with thermal pools, hammam, and bespoke treatments using rare botanicals.</div>
+      </div>
+      <div class="amenity-item">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <div class="amenity-name serif">Concierge</div>
+        <div class="amenity-desc">A dedicated team available around the clock to curate experiences, secure reservations, and fulfil every wish.</div>
+      </div>
+      <div class="amenity-item">
+        <div class="amenity-icon">
+          <svg viewBox="0 0 24 24"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
+        </div>
+        <div class="amenity-name serif">Pool & Fitness</div>
+        <div class="amenity-desc">A heated rooftop pool with panoramic views, alongside a state-of-the-art fitness centre open all hours.</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="booking">
+    <div class="section-header">
+      <div class="section-eyebrow">Reservations</div>
+      <h2 class="section-title serif" style="color:var(--ivory)">Begin Your <em style="color:var(--gold)">Journey</em></h2>
+      <div class="divider"></div>
+      <p class="section-sub" style="color:rgba(255,255,255,0.45)">Reserve directly for the finest available rates and personalised service.</p>
+    </div>
+    <div class="booking-form-wrap">
+      <div id="quick-book-msg"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>Check-in Date</label>
+          <input type="date" id="qb-checkin">
+        </div>
+        <div class="form-group">
+          <label>Check-out Date</label>
+          <input type="date" id="qb-checkout">
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem">
+        <label>Room Type</label>
+        <select id="qb-room">
+          <option value="single">Single Room — from ₹1000/night</option>
+          <option value="double">Double Room — from ₹1900/night</option>
+          <option value="triple">Triple Room — from ₹2700/night</option>
+          <option value="luxury">Luxury Room — from ₹5000/night</option>
+          <option value="deluxe">Deluxe Room — from ₹8000/night</option>
+        </select>
+      </div>
+      <div class="form-group" style="margin-bottom:1.5rem">
+        <label>Special Requests</label>
+        <textarea id="qb-requests" rows="3" placeholder="Anniversary setup, dietary requirements, early check-in…"></textarea>
+      </div>
+      <div class="form-submit-row">
+        <button class="btn-gold" onclick="handleQuickBook()">Reserve Now</button>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-logo serif">Aurélia</div>
+    <div class="footer-tagline">Grand Hotel · Paris · Est. 1924</div>
+    <div class="footer-links">
+      <a onclick="scrollToSection('rooms')">Rooms & Suites</a>
+      <a onclick="scrollToSection('amenities')">Facilities</a>
+      <a onclick="scrollToSection('booking')">Reservations</a>
+      <a onclick="openAuthModal()">Member Login</a>
+    </div>
+    <div class="footer-copy">© 2025 Aurélia Grand Hotel. All rights reserved. All rates in INR.</div>
+  </footer>
+</div>
+
+<div id="page-dashboard" class="page">
+  <div id="dashboard">
+    <div class="dash-header">
+      <div class="dash-welcome serif">Welcome back, <span id="dash-name">Guest</span></div>
+    </div>
+    <div class="dash-grid">
+      <div class="dash-sidebar">
+        <div class="dash-user-info">
+          <div class="dash-avatar" id="dash-avatar">G</div>
+          <div class="dash-user-name" id="dash-user-display">Guest</div>
+          <div class="dash-user-email" id="dash-user-email"></div>
+        </div>
+        <ul class="dash-menu">
+          <li><button class="active" onclick="showPanel('reservations', this)">My Reservations</button></li>
+          <li><button onclick="showPanel('new-booking', this)">New Booking</button></li>
+          <li><button onclick="showPanel('profile', this)">Profile</button></li>
+        </ul>
+        <button class="dash-logout" onclick="handleLogout()">Sign Out</button>
+      </div>
+      <div class="dash-content">
+        <div class="dash-panel active" id="panel-reservations">
+          <div class="panel-title serif">My Reservations</div>
+          <div id="reservations-list">
+            <div class="empty-state">
+              <div class="empty-icon">⏳</div>
+              <div class="empty-title serif">Loading…</div>
+            </div>
+          </div>
+        </div>
+        <div class="dash-panel" id="panel-new-booking">
+          <div class="panel-title serif">New Reservation</div>
+          <div style="background:var(--white);border:1px solid rgba(107,101,88,0.12);padding:2rem">
+            <div id="new-booking-msg"></div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Check-in Date</label>
+                <input type="date" id="nb-checkin">
+              </div>
+              <div class="form-group">
+                <label>Check-out Date</label>
+                <input type="date" id="nb-checkout">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:1.5rem">
+              <label>Room Type</label>
+              <select id="nb-room">
+                <option value="single">Single</option>
+                <option value="double">Double</option>
+                <option value="triple">Triple</option>
+                <option value="luxury">Luxury</option>
+                <option value="deluxe">Deluxe</option>
+              </select>
+            </div>
+            <div class="form-group" style="margin-bottom:1.5rem">
+              <label>Special Requests</label>
+              <textarea id="nb-requests" rows="3" placeholder="Any preferences…"></textarea>
+            </div>
+            <button class="btn-gold" id="nb-btn" onclick="handleDashNewReservation()">Confirm Reservation</button>
+          </div>
+        </div>
+        <div class="dash-panel" id="panel-profile">
+          <div class="panel-title serif">Profile</div>
+          <div class="profile-wrap">
+            <div id="profile-msg"></div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" id="profile-fname">
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" id="profile-lname">
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom:1rem">
+              <label>Email Address</label>
+              <input type="email" id="profile-email" readonly style="opacity:0.6;cursor:not-allowed">
+            </div>
+            <div class="form-group" style="margin-bottom:1.5rem">
+              <label>Phone Number</label>
+              <input type="tel" id="profile-phone" placeholder="+91 00000 00000">
+            </div>
+            <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+              <button class="btn-gold" id="profile-save-btn" onclick="handleProfileUpdate()" style="max-width:200px">Save Changes</button>
+              <button class="btn-sm btn-sm-danger" onclick="handleDeleteAccount()" style="font-size:0.65rem;padding:0.55rem 1rem">Delete Account</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================================
+// CONFIG — Change BASE_URL to match your running server
+// =====================================================================
+const BASE_URL = 'http://localhost:3000';
+
+// =====================================================================
+// STATE
+// =====================================================================
+let authToken = localStorage.getItem('aurelia_token') || null;
+let currentUser = JSON.parse(localStorage.getItem('aurelia_user') || 'null');
+
+// =====================================================================
+// UTILITIES
+// =====================================================================
+function api(path, opts = {}) {
+  const headers = { 'Content-Type': 'application/json', ...(opts.headers || {}) };
+  if (authToken) headers['Authorization'] = `Bearer ${authToken}`;
+  return fetch(BASE_URL + path, { ...opts, headers });
+}
+
+function showNotify(msg, type = 'default') {
+  const el = document.getElementById('notify');
+  el.textContent = msg;
+  el.className = `notify show ${type === 'success' ? 'success-notify' : type === 'error' ? 'error-notify' : ''}`;
+  setTimeout(() => { el.className = 'notify'; }, 4000);
+}
+
+function showMsg(id, msg, type) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.innerHTML = msg ? `<div class="msg msg-${type}">${msg}</div>` : '';
+}
+
+function setLoading(btnId, loading, text) {
+  const btn = document.getElementById(btnId);
+  if (!btn) return;
+  btn.disabled = loading;
+  btn.innerHTML = loading ? `<span class="spinner"></span>${text || 'Please wait…'}` : (text || btn.dataset.orig || btn.innerHTML);
+  if (!loading && text) btn.dataset.orig = text;
+}
+
+function fmtDate(d) {
+  if (!d) return 'N/A';
+  return new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function todayStr() {
+  return new Date().toISOString().split('T')[0];
+}
+
+// =====================================================================
+// PAGE / PANEL ROUTING
+// =====================================================================
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById('page-' + name);
+  if (page) {
+    page.classList.add('active');
+    window.scrollTo(0, 0);
+  }
+  if (name === 'dashboard') loadReservations();
+}
+
+function scrollToSection(id) {
+  showPage('home');
+  setTimeout(() => {
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  }, 50);
+}
+
+function showPanel(name, btn) {
+  document.querySelectorAll('.dash-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.dash-menu button').forEach(b => b.classList.remove('active'));
+  const panel = document.getElementById('panel-' + name);
+  if (panel) panel.classList.add('active');
+  if (btn) btn.classList.add('active');
+  if (name === 'reservations') loadReservations();
+}
+
+// =====================================================================
+// MODAL
+// =====================================================================
+function openAuthModal() {
+  document.getElementById('auth-modal').classList.add('open');
+}
+function closeAuthModal() {
+  document.getElementById('auth-modal').classList.remove('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+function switchTab(tab) {
+  document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// =====================================================================
+// AUTH HANDLERS
+// =====================================================================
+async function handleLogin() {
+  const email = document.getElementById('login-email').value.trim();
+  const password = document.getElementById('login-password').value;
+  if (!email || !password) return showMsg('login-msg', 'Please enter your email and password.', 'error');
+  setLoading('login-btn', true, 'Signing in…');
+  showMsg('login-msg', '', '');
+  try {
+    const res = await api('/api/guest/login', {
+      method: 'POST',
+      body: JSON.stringify({ email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error || 'Login failed');
+    const token = data.token || data.accessToken || data.jwt;
+    const user = data.user || { email, name: data.name || email.split('@')[0] };
+    authToken = token;
+    currentUser = user;
+    localStorage.setItem('aurelia_token', token);
+    localStorage.setItem('aurelia_user', JSON.stringify(user));
+    onAuthSuccess();
+    closeAuthModal();
+    showNotify('Welcome back to Aurélia.', 'success');
+  } catch (e) {
+    showMsg('login-msg', e.message, 'error');
+  } finally {
+    setLoading('login-btn', false, 'Sign In');
+  }
+}
+
+async function handleSignup() {
+  const fname = document.getElementById('signup-fname').value.trim();
+  const lname = document.getElementById('signup-lname').value.trim();
+  const phone = document.getElementById('signup-phone').value.trim();
+  const email = document.getElementById('signup-email').value.trim();
+  const password = document.getElementById('signup-password').value;
+  if (!fname || !email || !password) return showMsg('signup-msg', 'Please fill all required fields.', 'error');
+  if (password.length < 6) return showMsg('signup-msg', 'Password must be at least 6 characters.', 'error');
+  setLoading('signup-btn', true, 'Creating account…');
+  showMsg('signup-msg', '', '');
+  try {
+    const res = await api('/api/guest', {
+      method: 'POST',
+      // Mapped to exact backend requirement: name, phn_no, email, password
+      body: JSON.stringify({ name: `${fname} ${lname}`.trim(), phn_no: phone, email, password })
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || data.error || 'Signup failed');
+    showMsg('signup-msg', 'Account created! Please sign in.', 'success');
+    setTimeout(() => {
+      document.querySelectorAll('.modal-tab')[0].click();
+      document.getElementById('login-email').value = email;
+    }, 1200);
+  } catch (e) {
+    showMsg('signup-msg', e.message, 'error');
+  } finally {
+    setLoading('signup-btn', false, 'Create Account');
+  }
+}
+
+function onAuthSuccess() {
+  document.getElementById('nav-auth-btn').classList.add('hidden');
+  document.getElementById('nav-dash-btn').classList.remove('hidden');
+  const name = currentUser?.name || currentUser?.firstName || currentUser?.email?.split('@')[0] || 'Guest';
+  document.getElementById('dash-name').textContent = name;
+  document.getElementById('dash-user-display').textContent = name;
+  document.getElementById('dash-user-email').textContent = currentUser?.email || '';
+  document.getElementById('dash-avatar').textContent = name[0].toUpperCase();
+  
+  // Try to pre-fill using the combined "name" and specific "phn_no" format
+  let first = '', last = '';
+  if (name) {
+      const parts = name.split(' ');
+      first = parts[0];
+      last = parts.slice(1).join(' ');
+  }
+  document.getElementById('profile-fname').value = currentUser?.firstName || first || '';
+  document.getElementById('profile-lname').value = currentUser?.lastName || last || '';
+  document.getElementById('profile-email').value = currentUser?.email || '';
+  document.getElementById('profile-phone').value = currentUser?.phn_no || currentUser?.phone || '';
+  loadGuestProfile();
+}
+
+async function loadGuestProfile() {
+  if (!authToken) return;
+  try {
+    const res = await api('/api/guest');
+    if (!res.ok) return;
+    const responseData = await res.json();
+    // Assuming backend returns an array inside `data` property: { success: true, data: [...] }
+    const guestData = responseData.data ? (Array.isArray(responseData.data) ? responseData.data[0] : responseData.data) : responseData.guest || responseData.user || responseData;
+    
+    if (guestData && typeof guestData === 'object') {
+      currentUser = { ...currentUser, ...guestData };
+      localStorage.setItem('aurelia_user', JSON.stringify(currentUser));
+      
+      const name = guestData.name || currentUser.name;
+      let first = '', last = '';
+      if (name) {
+          const parts = name.split(' ');
+          first = parts[0];
+          last = parts.slice(1).join(' ');
+      }
+      
+      document.getElementById('dash-name').textContent = name;
+      document.getElementById('dash-user-display').textContent = name;
+      document.getElementById('dash-user-email').textContent = guestData.email || currentUser?.email || '';
+      document.getElementById('dash-avatar').textContent = name[0].toUpperCase();
+      document.getElementById('profile-fname').value = first || '';
+      document.getElementById('profile-lname').value = last || '';
+      document.getElementById('profile-email').value = guestData.email || currentUser?.email || '';
+      // Updated to match backend variable 'phn_no'
+      document.getElementById('profile-phone').value = guestData.phn_no || '';
+    }
+  } catch (e) { /* silent — profile load is non-critical */ }
+}
+
+function handleLogout() {
+  authToken = null;
+  currentUser = null;
+  localStorage.removeItem('aurelia_token');
+  localStorage.removeItem('aurelia_user');
+  document.getElementById('nav-auth-btn').classList.remove('hidden');
+  document.getElementById('nav-dash-btn').classList.add('hidden');
+  showPage('home');
+  showNotify('You have been signed out.');
+}
+
+// =====================================================================
+// RESERVATION HANDLERS
+// =====================================================================
+async function loadReservations() {
+  const container = document.getElementById('reservations-list');
+  container.innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title serif">Loading…</div></div>';
+  if (!authToken) {
+    container.innerHTML = '<div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title serif">Please sign in</div><div class="empty-sub">Sign in to view your reservations</div></div>';
+    return;
+  }
+  try {
+    const res = await api('/api/reservations');
+    const responseData = await res.json();
+    if (!res.ok) throw new Error(responseData.message || 'Could not load reservations');
+    
+    // Adapted to parse the backend `data` key
+    const reservations = Array.isArray(responseData.data) ? responseData.data : (Array.isArray(responseData) ? responseData : []);
+    
+    if (reservations.length === 0) {
+      container.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">✦</div>
+        <div class="empty-title serif">No Reservations Yet</div>
+        <div class="empty-sub">Your upcoming stays will appear here.</div>
+        <button class="btn-primary" style="margin-top:1.5rem" onclick="showPanel('new-booking', null)">Make a Reservation</button>
+      </div>`;
+      return;
+    }
+    container.innerHTML = reservations.map(r => renderResCard(r)).join('');
+  } catch (e) {
+    container.innerHTML = `<div class="msg msg-error">Could not load reservations: ${e.message}</div>`;
+  }
+}
+
+function renderResCard(r) {
+  const id = r.reservation_id || r._id || r.id; // added reservation_id fallback
+  const status = (r.status || 'confirmed').toLowerCase();
+  const statusClass = status === 'cancelled' ? 'status-cancelled' : status === 'pending' ? 'status-pending' : 'status-confirmed';
+  const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
+  const roomType = r.room_type || r.roomType || r.type || 'Room';
+  const roomLabel = roomType.charAt(0).toUpperCase() + roomType.slice(1);
+  return `<div class="res-card">
+    <div style="flex:1">
+      <div class="res-room-type">${roomLabel} Room</div>
+      <div class="res-dates serif">${fmtDate(r.start_date)} → ${fmtDate(r.end_date)}</div>
+      <div class="res-meta">Booking #${String(id).slice(-6).toUpperCase()}</div>
+      <div class="res-actions">
+        <button class="btn-sm btn-sm-outline" onclick="viewCost('${id}', '${roomLabel}')">View Cost</button>
+        ${status !== 'cancelled' ? `<button class="btn-sm btn-sm-outline" onclick="openEditModal(${JSON.stringify(r).replace(/"/g,'&quot;')})">Modify</button>
+        <button class="btn-sm btn-sm-danger" onclick="cancelReservation('${id}')">Cancel</button>` : ''}
+      </div>
+    </div>
+    <span class="res-status ${statusClass}">${statusLabel}</span>
+  </div>`;
+}
+
+async function handleNewReservation() {
+  if (!authToken) { closeModal('new-res-modal'); openAuthModal(); return; }
+  const body = {
+    start_date: document.getElementById('res-checkin').value,
+    end_date: document.getElementById('res-checkout').value,
+    // explicitly named room_type
+    room_type: document.getElementById('res-room-type').value
+  };
+  if (!body.start_date || !body.end_date) return showMsg('new-res-msg', 'Please select check-in and check-out dates.', 'error');
+  if (body.start_date >= body.end_date) return showMsg('new-res-msg', 'Check-out must be after check-in.', 'error');
+  setLoading('res-submit-btn', true, 'Confirming…');
+  try {
+    const res = await api('/api/reservations', { method: 'POST', body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Reservation failed');
+    closeModal('new-res-modal');
+    showNotify('Your reservation has been confirmed!', 'success');
+    showPage('dashboard');
+  } catch (e) {
+    showMsg('new-res-msg', e.message, 'error');
+  } finally {
+    setLoading('res-submit-btn', false, 'Confirm Reservation');
+  }
+}
+
+async function handleDashNewReservation() {
+  const body = {
+    start_date: document.getElementById('nb-checkin').value,
+    end_date: document.getElementById('nb-checkout').value,
+    // explicitly named room_type
+    room_type: document.getElementById('nb-room').value
+  };
+  if (!body.start_date || !body.end_date) return showMsg('new-booking-msg', 'Please select check-in and check-out dates.', 'error');
+  if (body.start_date >= body.end_date) return showMsg('new-booking-msg', 'Check-out must be after check-in.', 'error');
+  setLoading('nb-btn', true, 'Confirming…');
+  showMsg('new-booking-msg', '', '');
+  try {
+    const res = await api('/api/reservations', { method: 'POST', body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Reservation failed');
+    showMsg('new-booking-msg', 'Your reservation has been confirmed!', 'success');
+    showNotify('Reservation confirmed!', 'success');
+    setTimeout(() => showPanel('reservations', document.querySelector('.dash-menu button')), 1500);
+  } catch (e) {
+    showMsg('new-booking-msg', e.message, 'error');
+  } finally {
+    setLoading('nb-btn', false, 'Confirm Reservation');
+  }
+}
+
+function openEditModal(r) {
+  document.getElementById('edit-res-id').value = r.reservation_id || r._id || r.id;
+  document.getElementById('edit-checkin').value = (r.start_date || '').split('T')[0];
+  document.getElementById('edit-checkout').value = (r.end_date || '').split('T')[0];
+  document.getElementById('edit-room-type').value = r.room_type || r.roomType || 'single';
+  showMsg('edit-res-msg', '', '');
+  document.getElementById('edit-res-modal').classList.add('open');
+}
+
+async function handleEditReservation() {
+  const id = document.getElementById('edit-res-id').value;
+  // NOTE: Your backend controller for updateReservation only checks for `name`, `phn_no`, and `email`
+  // so we include them here to satisfy the controller alongside the dates.
+  const body = {
+    start_date: document.getElementById('edit-checkin').value,
+    end_date: document.getElementById('edit-checkout').value,
+    room_type: document.getElementById('edit-room-type').value,
+    name: currentUser?.name || '',
+    phn_no: currentUser?.phn_no || '',
+    email: currentUser?.email || ''
+  };
+  if (body.start_date >= body.end_date) return showMsg('edit-res-msg', 'Check-out must be after check-in.', 'error');
+  setLoading('edit-res-btn', true, 'Updating…');
+  try {
+    const res = await api(`/api/reservations/${id}`, { method: 'PUT', body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Update failed');
+    closeModal('edit-res-modal');
+    showNotify('Reservation updated successfully.', 'success');
+    loadReservations();
+  } catch (e) {
+    showMsg('edit-res-msg', e.message, 'error');
+  } finally {
+    setLoading('edit-res-btn', false, 'Update Reservation');
+  }
+}
+
+async function cancelReservation(id) {
+  if (!confirm('Are you sure you want to cancel this reservation?')) return;
+  try {
+    const res = await api(`/api/reservations/${id}`, { method: 'DELETE' });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.message || 'Cancellation failed');
+    }
+    showNotify('Reservation cancelled.', 'default');
+    loadReservations();
+  } catch (e) {
+    showNotify(e.message, 'error');
+  }
+}
+
+async function viewCost(id, roomLabel) {
+  document.getElementById('cost-res-label').textContent = `${roomLabel} Room · Booking #${String(id).slice(-6).toUpperCase()}`;
+  document.getElementById('cost-modal-body').innerHTML = '<div class="empty-state"><div class="empty-icon">⏳</div><div class="empty-title serif">Calculating…</div></div>';
+  document.getElementById('cost-modal').classList.add('open');
+  try {
+    const res = await api(`/api/reservations/cost/${id}`);
+    const responseData = await res.json();
+    if (!res.ok) throw new Error(responseData.message || 'Could not fetch cost');
+    
+    // Check inside the 'data' wrapper based on backend implementation
+    const costData = responseData.data || responseData;
+    const cost = costData.totalCost ?? costData.cost ?? costData.total ?? costData.amount ?? costData;
+    
+    const nights = costData.nights || costData.numNights || '';
+    const perNight = costData.perNight || costData.pricePerNight || '';
+    document.getElementById('cost-modal-body').innerHTML = `
+      <div style="border:1px solid rgba(107,101,88,0.15);padding:2rem;background:var(--cream)">
+        ${nights ? `<div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;font-size:0.85rem;color:var(--stone)"><span>Nights</span><span>${nights}</span></div>` : ''}
+        ${perNight ? `<div style="display:flex;justify-content:space-between;margin-bottom:0.75rem;font-size:0.85rem;color:var(--stone)"><span>Rate per Night</span><span>₹${Number(perNight).toLocaleString()}</span></div>` : ''}
+        <div style="border-top:1px solid rgba(107,101,88,0.2);margin-top:0.75rem;padding-top:1rem;display:flex;justify-content:space-between;align-items:baseline">
+          <span style="font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--stone)">Total</span>
+          <span style="font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:300;color:var(--charcoal)">₹${Number(cost).toLocaleString()}</span>
+        </div>
+      </div>`;
+  } catch (e) {
+    document.getElementById('cost-modal-body').innerHTML = `<div class="msg msg-error">${e.message}</div>`;
+  }
+}
+
+async function handleProfileUpdate() {
+  const body = {
+    // Merged firstName and lastName into 'name' and mapped 'phn_no'
+    name: `${document.getElementById('profile-fname').value.trim()} ${document.getElementById('profile-lname').value.trim()}`.trim(),
+    phn_no: document.getElementById('profile-phone').value.trim()
+  };
+  setLoading('profile-save-btn', true, 'Saving…');
+  showMsg('profile-msg', '', '');
+  try {
+    const res = await api('/api/guest', { method: 'PUT', body: JSON.stringify(body) });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || 'Update failed');
+    const updatedUser = { ...currentUser, ...body };
+    currentUser = updatedUser;
+    localStorage.setItem('aurelia_user', JSON.stringify(updatedUser));
+    onAuthSuccess();
+    showMsg('profile-msg', 'Profile updated successfully.', 'success');
+  } catch (e) {
+    showMsg('profile-msg', e.message, 'error');
+  } finally {
+    setLoading('profile-save-btn', false, 'Save Changes');
+  }
+}
+
+async function handleDeleteAccount() {
+  if (!confirm('Are you sure you want to permanently delete your account? This cannot be undone.')) return;
+  try {
+    const res = await api('/api/guest', { method: 'DELETE' });
+    if (!res.ok) {
+      const data = await res.json();
+      throw new Error(data.message || 'Could not delete account');
+    }
+    handleLogout();
+    showNotify('Your account has been deleted.', 'default');
+  } catch (e) {
+    showMsg('profile-msg', e.message, 'error');
+  }
+}
+
+// Quick book from homepage
+function handleQuickBook() {
+  if (!authToken) {
+    const start_date = document.getElementById('qb-checkin').value;
+    const end_date = document.getElementById('qb-checkout').value;
+    const roomType = document.getElementById('qb-room').value;
+    openAuthModal();
+    showMsg('quick-book-msg', 'Please sign in to complete your reservation.', 'error');
+    return;
+  }
+  const start_date = document.getElementById('qb-checkin').value;
+  const end_date = document.getElementById('qb-checkout').value;
+  const roomType = document.getElementById('qb-room').value;
+  // Pre-fill the new-res modal
+  document.getElementById('res-checkin').value = start_date;
+  document.getElementById('res-checkout').value = end_date;
+  document.getElementById('res-room-type').value = roomType;
+  openNewResModal(roomType);
+}
+
+function openNewResModal(roomType) {
+  if (!authToken) { openAuthModal(); return; }
+  document.getElementById('new-res-room-name').textContent = roomType || 'Select your room type';
+  if (roomType) document.getElementById('res-room-type').value = roomType;
+  const today = todayStr();
+  const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  if (!document.getElementById('res-checkin').value) document.getElementById('res-checkin').value = today;
+  if (!document.getElementById('res-checkout').value) document.getElementById('res-checkout').value = tomorrow;
+  showMsg('new-res-msg', '', '');
+  document.getElementById('new-res-modal').classList.add('open');
+}
+
+// =====================================================================
+// SCROLL EFFECTS
+// =====================================================================
+window.addEventListener('scroll', () => {
+  const header = document.getElementById('header');
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+// Enter key for login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (document.getElementById('tab-login').classList.contains('active') &&
+        document.getElementById('auth-modal').classList.contains('open')) {
+      handleLogin();
+    }
+  }
+});
+
+// =====================================================================
+// INIT
+// =====================================================================
+window.addEventListener('DOMContentLoaded', () => {
+  // Remove loader
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('fade-out');
+  }, 1200);
+
+  // Set min dates
+  const today = todayStr();
+  ['qb-checkin','res-checkin','nb-checkin','edit-checkin'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.min = today;
+  });
+  ['qb-checkout','res-checkout','nb-checkout','edit-checkout'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.min = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+  });
+
+  // Restore auth state
+  if (authToken && currentUser) {
+    onAuthSuccess();
+  }
+});
+</script>
+</body>
+</html>
